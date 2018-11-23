@@ -6,6 +6,13 @@ const rp = require('request-promise');
 const url = 'https://graph-video.facebook.com';
 const retryMax = 10;
 let retry = 0;
+const unpublished_content_types = [
+	'PUBLISHED',
+	'DRAFT',
+	'SCHEDULED',
+	'ADS_POST',
+	'INLINE_CREATED'
+]
 
 function apiInit(args, videoSize) {
 	const options = {
@@ -27,6 +34,7 @@ function apiInit(args, videoSize) {
 function apiFinish(args, id, video_id) {
 	const videoTitle = args.title || '';
 	const description = args.description || '';
+	const unpublished_content_type = unpublished_content_types.includes(args.publish_type) ? args.publish_type : 'PUBLISHED'
 	const options = {
 		method: 'POST',
 		uri: `${url}/v2.6/${args.id}/videos`,
@@ -35,7 +43,8 @@ function apiFinish(args, id, video_id) {
 			upload_phase: 'finish',
 			upload_session_id: id,
 			title: videoTitle,
-			description: description
+			description: description,
+			unpublished_content_type
 		},
 		json: true
 	};
