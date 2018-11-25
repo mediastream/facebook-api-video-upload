@@ -100,7 +100,7 @@ function uploadChain(buffer, args, res, ids) {
 }
 
 function facebookApiVideoUpload(args) {
-	return streamToPromise(args.stream)		
+	return Promise.resolve(streamToPromise(args.stream))
 		.then(buffer => [buffer, apiInit(args, buffer.length)])
 		.spread((buffer, res) => {
 			const ids = [res.upload_session_id, res.video_id];
